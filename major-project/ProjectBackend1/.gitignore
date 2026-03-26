@@ -1,0 +1,35 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Environment variables & secrets
+.env
+
+# Local databases
+*.db
+*.sqlite3
+
+# Logs & test artifacts
+*.log
+coverage/
+.pytest_cache/
+
+# OS files
+Thumbs.db
+.DS_Store
+idea.md
+mongo.md
+PHASE1_GUIDE.md
+backup.txt
+
+

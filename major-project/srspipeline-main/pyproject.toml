@@ -1,0 +1,23 @@
+[project]
+name = "srspipeline"
+version = "1.0.0"
+description = "SRS (Software Requirements Specification) Generation Pipeline using Google Gemini AI with validation"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "google-genai>=1.0.0",
+    "python-dotenv>=1.0.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.0.0",
+]
+
+[project.scripts]
+srs-pipeline = "main:app"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "httpx>=0.27.0",
+]
+

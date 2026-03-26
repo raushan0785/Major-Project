@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI SRS Generator</title>
+    <link rel="icon" href="data:,">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-glob"></div>
+    <div class="container">
+        <!-- Auth Section -->
+        <div id="auth-section" class="section glass-panel">
+            <h1 class="logo-title">🚀 AI SRS Generator</h1>
+
+            <!-- Login Form -->
+            <div id="login-form">
+                <h2>Welcome Back</h2>
+                <div class="form-group">
+                    <input type="email" id="login-email" placeholder="Email" value="test@example.com">
+                    <input type="password" id="login-password" placeholder="Password" value="password123">
+                    <button onclick="login()" class="primary-btn glow-effect" id="login-btn">Login</button>
+                    <p class="switch-text">New here? <a href="#" onclick="toggleAuth('signup')">Create an account</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form" class="hidden">
+                <h2>Create Account</h2>
+                <div class="form-group">
+                    <input type="text" id="signup-name" placeholder="Full Name">
+                    <input type="email" id="signup-email" placeholder="Email">
+                    <input type="password" id="signup-password" placeholder="Password">
+                    <button onclick="signup()" class="secondary-btn glow-effect" id="signup-btn">Sign Up</button>
+                    <p class="switch-text">Already have an account? <a href="#" onclick="toggleAuth('login')">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section glass-panel hidden">
+            <header>
+                <h2>📝 SRS Dashboard</h2>
+                <div class="user-info">
+                    <span id="user-display-name">User</span>
+                    <button onclick="logout()" class="logout-btn">Logout</button>
+                </div>
+            </header>
+
+            <div class="main-actions">
+                <!-- Input Method Selection -->
+                <div class="input-method-tabs">
+                    <button class="tab-btn active" onclick="switchMethod('audio')">🎙️ Upload Audio</button>
+                    <button class="tab-btn" onclick="switchMethod('text')">✍️ Direct Text</button>
+                </div>
+
+                <!-- Audio Input -->
+                <div id="audio-input-area" class="input-area">
+                    <label>Upload Audio File (.wav, .mp3)</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="audio-file" accept="audio/*">
+                    </div>
+                    <button onclick="transcribeAudio()" class="action-btn" id="transcribe-btn">Transcribe Audio</button>
+                    <div id="transcribe-loading" class="loading-spinner hidden"></div>
+
+                    <div id="transcription-result" class="result-box hidden">
+                        <h4>Transcription:</h4>
+                        <textarea id="transcription-text" rows="4" placeholder="Transcribed text..." readonly></textarea>
+                        <button onclick="enableEdit()" class="edit-btn" id="edit-btn">Edit</button>
+                        <input type="hidden" id="transcription-id">
+                    </div>
+                </div>
+
+                <!-- Text Input -->
+                <div id="text-input-area" class="input-area hidden">
+                    <label>Enter Requirement</label>
+                    <textarea id="direct-text" rows="4"
+                        placeholder="Build a food delivery app with login, payment gateway, and rider tracking..."></textarea>
+                </div>
+
+                <!-- Grammar Correction Button -->
+                <div class="grammar-correction-wrapper">
+                    <button onclick="checkGrammar()" class="secondary-btn grammar-btn" id="grammar-btn">
+                        ✏️ Check Grammar & Improve
+                    </button>
+                    <p class="grammar-hint">Tip: Check grammar to improve your requirement clarity (optional)</p>
+                </div>
+
+                <!-- Feature Buttons: Gap Analysis & Market Analysis -->
+                <div class="analysis-feature-wrapper" style="display: flex; gap: 15px; margin: 25px 0;">
+                    <button onclick="showGapAnalysis()" class="secondary-btn" style="flex:1; text-transform: none;">
+                        📉 Gap Analysis
+                    </button>
+                    <button onclick="showMarketAnalysis()" class="secondary-btn" style="flex:1; text-transform: none;">
+                        📊 Market Analysis
+                    </button>
+                </div>
+
+                <!-- Template Selection & Generation -->
+                <div class="generation-area">
+                    <div class="select-wrapper">
+                        <label>Select Template</label>
+                        <select id="template-select" class="styled-select">
+                            <option value="agile">Agile (User Stories)</option>
+                            <option value="ieee">IEEE 830 (Formal)</option>
+                            <option value="minimal">Minimal (Brief)</option>
+                            <option value="startup">Startup (Pitch Focus)</option>
+                        </select>
+                    </div>
+
+                    <button onclick="generateSRS()" class="primary-btn generate-btn" id="generate-btn">✨ Generate
+                        SRS</button>
+                    <div id="generate-loading" class="loading-text hidden">Generating... <span
+                            class="loader-dots"></span></div>
+                </div>
+            </div>
+
+            <!-- SRS List -->
+            <div class="srs-list-container">
+                <h3>📂 My Documents</h3>
+                <div class="table-responsive">
+                    <table class="srs-table">
+                        <thead>
+                            <tr>
+                                <th>Requirement / Text</th>
+                                <th>Template</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="srs-list-body">
+                            <!-- Rows will be injected here -->
+                        </tbody>
+                    </table>
+                    <div id="list-loading" class="loading-spinner hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grammar Correction Modal -->
+    <div id="grammar-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✏️ Grammar Correction Suggestions</h3>
+                <button onclick="closeGrammarModal()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="grammar-original" class="original-text"></div>
+                
+                <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 14px;">
+                    Select the best grammar-corrected version to use as your prompt for AI SRS generation:
+                </p>
+                
+                <div id="grammar-suggestions" class="suggestions-container">
+                    <!-- Suggestions will be inserted here -->
+                </div>
+                
+                <div id="grammar-loading" class="loading-spinner hidden"></div>
+                <div id="grammar-error" class="error-message hidden"></div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeGrammarModal()" class="secondary-btn">Cancel</button>
+                <button onclick="useSelectedSuggestion()" class="secondary-btn" id="use-suggestion-btn">Apply to Text Field</button>
+                <button onclick="generateSRSWithSelected()" class="primary-btn" id="generate-with-selected-btn">✨ Generate SRS with Selected</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Modal -->
+    <div id="analysis-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="analysis-modal-title">📊 AI Analysis</h3>
+                <button onclick="closeAnalysisModal()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="analysis-output" style="white-space: pre-wrap; color: #22223b; line-height: 1.6;"></div>
+                <div id="analysis-loading" class="loading-spinner hidden"></div>
+                <div id="analysis-error" class="error-message hidden"></div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeAnalysisModal()" class="secondary-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

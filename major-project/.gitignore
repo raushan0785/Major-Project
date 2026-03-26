@@ -1,0 +1,10 @@
+# Ignore unnecessary md files (but keep README.md)
+*.md
+!README.md
+!*/README.md
+
+# Ignore text logs and temporary tracker files
+*.txt
+!requirements.txt
+!ProjectBackend1/requirements.txt
+!whisper-main/requirements.txt
